@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+	<head>
+		<title>jQuery preloadImages Demo</title>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="../jquery.preloadimages.js"></script>
+		<script>
+		try {
+			$(document).ready(function(){
+				$("#go").click(function(){
+					var demo = $("#demo"),
+						yqlUrl = "http://query.yahooapis.com/v1/public/yql?q=SELECT%20enclosure.url%20FROM%20rss%20WHERE%20url%20%3D%20%22http%3A%2F%2Ffeed622.photobucket.com%2Falbums%2Ftt302%2FTentonaxe%2Faccount.rss%22&format=json";
+					demo.empty().append("<div class='loader'>Loading...</div>");
+					$.ajax({
+						url: yqlUrl,
+						dataType: "jsonp",
+						success: function(json){
+							function buildImg (src){
+								return "<img style='display: none' src='" + src + "' />";
+							}
+						
+							$.each(json.query.results.item,function(i,obj){
+								demo.append(buildImg(obj.enclosure.url));
+							});
+							demo.preloadImages(function(){							
+								demo.find('img').show().end().find('.loader').remove();
+							});
+						},
+						error: function(x,y,z){
+							alert(x + "\n" + y + "\n" + z);
+						}
+					});
+				});
+			});
+		}catch (err) {alert(err)};
+		</script>
+	</head>
+	<body>
+		<h1>jQuery preloadImages Demo</h1>
+		<hr />
+		<button id="go">Load Images</button>
+		<br />
+		These images are being pulled from http://feed622.photobucket.com/albums/tt302/Tentonaxe/account.rss using YQL<br />
+		<span style="color: red;"><b><em>*** WARNING! -- Clicking on the Load Images button will load 100 images onto this page. -- WARNING! ***</em></b></span>
+		<div id="demo"></div>
+	</body>
+</html>
