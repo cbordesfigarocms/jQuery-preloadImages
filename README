@@ -1,4 +1,6 @@
-jQuery Highlight Text plugin for highlighting text on
-	an html page. For more information, visit:
+jQuery Preload Images plugin for pre-loading images and 
+optionally running a callback function when done. 
 
-http://github.com/tentonaxe/jquery-preloadimages/
+For more information, visit:
+
+http://www.tentonaxe.com/2011/09/14/jquery-preloadimages-plugin/
