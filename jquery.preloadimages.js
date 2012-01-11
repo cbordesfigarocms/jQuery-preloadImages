@@ -59,7 +59,14 @@
     };
 
     $.fn.preloadImages = function(callback) {
-        var imgArr = this.find('img').map(function() {
+        var imgArr = (function(){
+        	if (this.filter("img").length) {
+        		return this.filter("img");
+        	}
+        	else {
+        		return this.find("img");
+        	}
+        })().map(function() {
             return this.src;
         }).get();
         if (imgArr.length === 0) {
