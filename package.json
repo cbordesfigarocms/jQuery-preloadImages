@@ -1,0 +1,32 @@
+{
+	"name": "preloadImages",
+	"version": "1.0.0",
+	"title": "jQuery.preloadImages()",
+	"author": {
+		"name": "Kevin Boudloche",
+		"url": "http://www.tentonaxe.com"
+	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "MIT-LICENSE.txt"
+		},
+		{
+			"type": "GPLv2",
+			"url": "GPL-LICENSE.txt"
+		}
+	],
+	"dependencies": {
+		"jquery": "1"
+	},
+	"description": "The main purpose of this plugin is to pre-load images using jQuery",
+	"keywords": [
+		"preload",
+		"image",
+		"load"
+	],
+	"homepage": "http://www.tentonaxe.com",
+	"files": [
+		"jquery.preloadimages.js"
+	]
+}
