@@ -1,20 +1,31 @@
-// This jQuery plugin implements the $.fn.preloadImages method and the
-// $.preloadImages method making it easy to preload images ensuring that
-// images are completely done loading before displaying them.
-//
-// There are two ways to use this plugin. The easiest way to use it is 
-// to simply append the images to your page, select the container of the 
-// images, and then call .preloadImages() it.
-//
-// $('body').preloadImages(function(){
-//   alert("All images are loaded!");
-// });
-//
-// The other way of using the plugin is to use the $.preloadImages method.
-//
-// $.preloadImages(["img1.jpg","img2.jpg","img3.jpg"], function(){
-//   alert("All images are loaded!");	
-// });
+/*
+ * jQuery preloadImages v1.0.0
+ * http://www.tentonaxe.com/
+ *
+ * Copyright 2012 Kevin Boudloche
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Date: 01/11/2012
+ *
+ * This jQuery plugin implements the $.fn.preloadImages method and the
+ * $.preloadImages method making it easy to preload images ensuring that
+ * images are completely done loading before displaying them.
+ *
+ * There are two ways to use this plugin. The easiest way to use it is 
+ * to simply append the images to your page, select the container of the 
+ * images, and then call .preloadImages() it.
+ *
+ * $('body').preloadImages(function(){
+ *   alert("All images are loaded!");
+ * });
+ *
+ * The other way of using the plugin is to use the $.preloadImages method.
+ *
+ * $.preloadImages(["img1.jpg","img2.jpg","img3.jpg"], function(){
+ *   alert("All images are loaded!");	
+ * });
+ * 
+ */
 (function($) {
     $.preloadImages = function(imgArr, callback) {
         if ($.type(imgArr) !== "array" || imgArr.length === 0) {
