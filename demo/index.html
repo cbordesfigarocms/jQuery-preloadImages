@@ -22,8 +22,11 @@
 							$.each(json.query.results.item,function(i,obj){
 								demo.append(buildImg(obj.enclosure.url));
 							});
-							demo.preloadImages(function(){							
-								demo.find('img').show().end().find('.loader').remove();
+							demo.preloadImages(function(){
+								$(this).show();
+								demo.find('img').show();
+							}).done(function(){
+								demo.find('.loader').remove();
 							});
 						},
 						error: function(x,y,z){
