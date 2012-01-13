@@ -5,7 +5,7 @@
  * Copyright 2012 Kevin Boudloche
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: 01/11/2012
+ * Date: 01/13/2012
  */
 (function($) {
     $.preloadImages = function(imgArr, callback) {
@@ -17,7 +17,7 @@
         var imagesLoaded = 0;
 
         function _loadAllImages() {
-            //Create an temp image and load the url
+            //Create a temp image and load the url
             var img = new Image();
             $(img).attr('src', imgArr[imagesLoaded]);
             if (img.complete || img.readyState === 4) {
@@ -51,25 +51,35 @@
     };
 
     $.fn.preloadImages = function(callback) {
-        var imgArr = (function(){
+        var imgArr = (function() {
             if (this.filter("img").length) {
                 return this.filter("img");
             }
             else {
                 return this.find("img");
             }
-        }).call(this), def = $.Deferred(), counter = imgArr.length-1;
+        }).call(this),
+            def = $.Deferred(),
+            counter = imgArr.length - 1;
         this.done = def.promise().done;
-        
-        imgArr.each(function(){
+
+		// loop through each image, sending each one individually to the
+		// $.preloadImages method
+        imgArr.each(function() {
             var img = this;
-            $.preloadImages( [this.src] , function() {
+            $.preloadImages([this.src], function() {
+            	
+            	// if callback is defined, run it with img as context
                 callback && callback.call(img);
-                if (!counter--) {                    
+                
+                // decrement the counter, and if it is 0, resolve deferred object
+                if (!counter--) {
                     def.resolve();
                 }
             });
         });
+        
+        // if imgArr was empty, go ahead and resolve the deferred object
         if (imgArr.length === 0) {
             def.resolve();
         }
