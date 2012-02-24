@@ -1,5 +1,5 @@
 /*
- * jQuery preloadImages v1.0.0
+ * jQuery preloadImages v2.0.0
  * http://www.tentonaxe.com/
  *
  * Copyright 2012 Kevin Boudloche
