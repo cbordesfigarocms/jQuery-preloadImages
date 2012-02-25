@@ -18,15 +18,15 @@
 							function buildImg (src){
 								return "<img style='display: none' src='" + src + "' />";
 							}
-						
+							var defArr = [];
 							$.each(json.query.results.item,function(i,obj){
-								demo.append(buildImg(obj.enclosure.url));
+								var img = $(buildImg(obj.enclosure.url)).appendTo(demo);
+								defArr.push($.preloadImages(obj.enclosure.url).done(function(){
+									img.show();
+								}));
 							});
-							demo.preloadImages(function(){
-								$(this).show();
-								demo.find('img').show();
-							}).done(function(){
-								demo.find('.loader').remove();
+							$.when.apply($,defArr).done(function(){
+								$(".loader").remove();
 							});
 						},
 						error: function(x,y,z){
