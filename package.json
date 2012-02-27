@@ -17,7 +17,7 @@
 		}
 	],
 	"dependencies": {
-		"jquery": "1"
+		"jquery": ">=1.5"
 	},
 	"description": "The main purpose of this plugin is to pre-load images using jQuery",
 	"keywords": [
