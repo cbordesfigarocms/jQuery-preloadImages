@@ -1,12 +1,12 @@
 ;(function($) {
 /*
- * jQuery preloadImages v2.1.0
+ * jQuery preloadImages v2.1.1
  * http://www.tentonaxe.com/
  *
  * Copyright 2012 Kevin Boudloche
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: 02/24/2012
+ * Date: 02/27/2012
  */
 $.preloadImages = function( imgArr, callback ) {
 	var def = $.Deferred(), imagesLoaded = 0, defArr = [];
