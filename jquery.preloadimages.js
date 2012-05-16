@@ -1,93 +1,117 @@
 ;(function($) {
 /*
- * jQuery preloadImages v2.1.1
+ * jQuery preloadImages v2.1.3
  * http://www.tentonaxe.com/
  *
  * Copyright 2012 Kevin Boudloche
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: 02/27/2012
+ * Date: 05/16/2012
  */
-$.preloadImages = function( imgArr, callback ) {
-	var def = $.Deferred(), imagesLoaded = 0, defArr = [];
-
-	/*
-	 * This function performs a single image preload
-	 */
-	function _preloadImage ( url, callback, fail ) {
-		var img = new Image();
-		img.src = url;
-		if ( img.complete || img.readyState === 4 ) {
-			callback();
-		}
-    	else {
-			$( img ).bind( "error load onreadystatechange", function ( e ) {
-				//clearTimeout(errorTimer);
-				if (e.type === "error") {
-					fail( "Image failed to load. - " + url);
-				}
-				else {
-					callback(url);
-				}
-			});
-		}
-
-	}
+$.preloadImages = function(){
+	var def = $.Deferred(), args = arguments, arg0type = $.type(args[0]);
 
 	/*
 	 * If a callback was passed to the plugin, bind it
-	 * to the always callback of the deferred
+	 * to the always callback of the deferred object
 	 */
-	if ( $.type( callback ) === "function" ) {
-		def.always( callback );
+	if ( $.type( args[1] ) === "function" ) {
+		def.always( args[1] );
 	}
-
+	
 	/*
-	 * If an empty array is passed to the plugin, 
-	 * immediately resolve and exit.
+	 * Under certain conditions, the deferred object
+	 * should resolve instantly.
 	 */
-	if ( $.type( imgArr ) === "array" && imgArr.length === 0 ) {
+	if (
+			// empty string
+			( args[0] === "" ) ||
+			// empty array
+			( arg0type === "array" && args[0].length === 0 ) ||
+			// not a string or array
+			( arg0type !== "array" || arg0type !== "string" )
+		){
 		def.resolve();
-		return def.promise();
-	} 
+	}	
+	else {		
+		// Add the image to the queue
+		this.addImage(args[0],def.resolve,def.reject);
+		if ( !this.loading ) {
+			this.processQueue();
+		}
+	}	
+	return def.promise();
+};
+$.extend( $.preloadImages, {
+	queue: [],
+	loading: false,
+	simultaneous: 1,
+	addImage: function( url, done, fail ) {
+		if ( url ) {
+			switch ( $.type( obj ) ) {
+				case "string":
+					this.queue.push( { url: obj } );
+					break;
+				case "object":
+					this.queue.push( obj );
+					break;
+				case "array":
+					for ( var i = 0; i < obj.length; i++ ) {
+						this.addImage( obj[i] );
+					}
+					break;
+			}
+		}
+		return this;
+	},
+	removeImage: function( url ) {
+		if ( $.type( url ) === "object" ) {
+			url = url.url;
+		}
+		else if ( $.type( url ) === "array" ) {
+			for (var i = 0; i < url.length; i++) {
+				this.removeImage(url[i]);
+			}
+		}
+		else {
+			for (var i = 0; i < this.queue.length; i++) {
+				if (this.queue[i].url = url) {
+					this.queue.splice(i,1);
+				}
+			}
+		}
+		return this;
+	},
+	preloadImage: function(url, done, fail){
+		var img = new Image();
+		$(img).load(done).error(fail)[0].src = url;
+		return this;
+	},
+	processQueue: function() {
+		var defArr = [], self = this;
+		
+		for (var i = 0; i < this.simultaneous; i++) {
+			defArr.push($.Deferred(function(deferred){
+				var img = self.queue.shift();
+				self.preloadImage(img.url,function(){
+					deferred.resolve();
+					img.done();
+				},function(){
+					deferred.reject();
+					img.fail();
+				});
+			}))
+		}
 
-	/*
-	 * If a url is passed as the first argument,
-	 * preload the url.
-	 */
-	if ( typeof imgArr === "string" ) {
-		_preloadImage( imgArr, def.resolve, def.reject );
-		return def.promise();
+		$.when.apply($,defArr).done(function(){
+			if ( self.queue.length > 0) {
+				self.processQueue();
+			}
+			else {
+				this.loading = false;
+			}
+		});
 	}
+});
 
-	/*
-	 * One last check to make sure that imgArr is
-	 * defined and is an array
-	 */
-	if ( !imgArr || $.type( imgArr ) !== "array" ) {
-		def.resolve();
-		return def.promise();
-	}
-
-	/*
-	 * If we've gotten this far, the first argument
-	 * is more than likely an array of images. Loop
-	 * through the array and preload each image. When
-	 * done, resolve the deferred object.
-	 */
-	$.each( imgArr, function ( i, url ) {
-
-		// add a new deferred object onto the array at this index
-		defArr[ i ] = $.Deferred();
-
-		// preload the image and resolve the deferred when done
-		_preloadImage( url, defArr[ i ].resolve, defArr[ i ].reject );
-
-	});
-
-	// When all deferreds in defArr are resolved, resolve the overall deferred object.
-	$.when.apply( $, defArr ).then( def.resolve, def.reject );
-		return def.promise();
-	};
-
-})( jQuery );
+})(jQuery);
