@@ -3,8 +3,7 @@
  * jQuery preloadImages v2.1.3
  * http://www.tentonaxe.com/
  *
- * Copyright 2012 Kevin Boudloche
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * This code is free to use, no attribution required.
  *
  * Date: 05/16/2012
  */
